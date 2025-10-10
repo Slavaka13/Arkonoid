@@ -8,10 +8,10 @@ using UiTimer = System.Windows.Forms.Timer;
 
 namespace Arkanoid
 {
-    /// <summary>Главная форма игры Arkanoid.</summary>
+    /// <summary>Р“Р»Р°РІРЅР°СЏ С„РѕСЂРјР° РёРіСЂС‹ Arkanoid.</summary>
     public partial class MainForm : Form
     {
-        // ——— Константы/настройки (без «магических чисел») ———
+        // вЂ”вЂ”вЂ” РљРѕРЅСЃС‚Р°РЅС‚С‹/РЅР°СЃС‚СЂРѕР№РєРё (Р±РµР· В«РјР°РіРёС‡РµСЃРєРёС… С‡РёСЃРµР»В») вЂ”вЂ”вЂ”
         private const int TargetFps = 60;
         private const int InitialLives = 3;
 
@@ -23,7 +23,7 @@ namespace Arkanoid
         private const int BlockCols = 6;
         private const int BlocksTopOffset = 50;
 
-        // ——— Состояние игры (camelCase, без подчёркиваний) ———
+        // вЂ”вЂ”вЂ” РЎРѕСЃС‚РѕСЏРЅРёРµ РёРіСЂС‹ (camelCase, Р±РµР· РїРѕРґС‡С‘СЂРєРёРІР°РЅРёР№) вЂ”вЂ”вЂ”
         private readonly UiTimer gameTimer = new();
         private readonly Random random = new();
 
@@ -38,14 +38,14 @@ namespace Arkanoid
 
         public MainForm()
         {
-            // важно: инициализация, которую генерирует дизайнер
+            // РІР°Р¶РЅРѕ: РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ, РєРѕС‚РѕСЂСѓСЋ РіРµРЅРµСЂРёСЂСѓРµС‚ РґРёР·Р°Р№РЅРµСЂ
             
 
-            // фикс корректного старта окна
+            // С„РёРєСЃ РєРѕСЂСЂРµРєС‚РЅРѕРіРѕ СЃС‚Р°СЂС‚Р° РѕРєРЅР°
             StartPosition = FormStartPosition.CenterScreen;
-            AutoScaleMode = AutoScaleMode.None;         // без DPI-масштабирования формы
-            ClientSize = new Size(800, 600);            // целевой рабочий размер
-            MinimumSize = new Size(800 + 16, 600 + 39); // (опц.) запрет уменьшать: клиент + рамка
+            AutoScaleMode = AutoScaleMode.None;         // Р±РµР· DPI-РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёСЏ С„РѕСЂРјС‹
+            ClientSize = new Size(800, 600);            // С†РµР»РµРІРѕР№ СЂР°Р±РѕС‡РёР№ СЂР°Р·РјРµСЂ
+            MinimumSize = new Size(800 + 16, 600 + 39); // (РѕРїС†.) Р·Р°РїСЂРµС‚ СѓРјРµРЅСЊС€Р°С‚СЊ: РєР»РёРµРЅС‚ + СЂР°РјРєР°
             FormBorderStyle = FormBorderStyle.FixedSingle;
 
             DoubleBuffered = true;
@@ -60,7 +60,7 @@ namespace Arkanoid
             MouseClick += OnFormMouseClick;
         }
 
-        /// <summary>Инициализация размеров окна и стартовых объектов.</summary>
+        /// <summary>РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЂР°Р·РјРµСЂРѕРІ РѕРєРЅР° Рё СЃС‚Р°СЂС‚РѕРІС‹С… РѕР±СЉРµРєС‚РѕРІ.</summary>
         private void OnFormLoad(object? sender, EventArgs e)
         {
             minX = 0;
@@ -71,15 +71,15 @@ namespace Arkanoid
             ResetWorld(hardReset: true);
         }
 
-        /// <summary>Полная или частичная переинициализация мира.</summary>
+        /// <summary>РџРѕР»РЅР°СЏ РёР»Рё С‡Р°СЃС‚РёС‡РЅР°СЏ РїРµСЂРµРёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РјРёСЂР°.</summary>
         private void ResetWorld(bool hardReset)
         {
-            // платформа
+            // РїР»Р°С‚С„РѕСЂРјР°
             int startPlatformX = (maxX - PlatformWidth) / 2;
             int startPlatformY = maxY - 155;
             platform = new Platform(new Rectangle(startPlatformX, startPlatformY, PlatformWidth, PlatformHeight));
 
-            // мяч на платформе
+            // РјСЏС‡ РЅР° РїР»Р°С‚С„РѕСЂРјРµ
             int startBallX = platform.Rect.X + (platform.Rect.Width - BallSize) / 2;
             int startBallY = platform.Rect.Y - BallSize - 4;
             ball = new Ball(new Rectangle(startBallX, startBallY, BallSize, BallSize))
@@ -97,13 +97,13 @@ namespace Arkanoid
             }
         }
 
-        /// <summary>Создаёт сетку блоков равномерно по экрану.</summary>
+        /// <summary>РЎРѕР·РґР°С‘С‚ СЃРµС‚РєСѓ Р±Р»РѕРєРѕРІ СЂР°РІРЅРѕРјРµСЂРЅРѕ РїРѕ СЌРєСЂР°РЅСѓ.</summary>
         private List<Block> BuildBlocksGrid()
         {
             var result = new List<Block>();
 
             int cellWidth = maxX / BlockCols;
-            int cellHeight = (maxY / BlockRows) / 2;  // верхняя половина экрана
+            int cellHeight = (maxY / BlockRows) / 2;  // РІРµСЂС…РЅСЏСЏ РїРѕР»РѕРІРёРЅР° СЌРєСЂР°РЅР°
 
             for (int row = 0; row < BlockRows; row++)
             {
@@ -123,10 +123,10 @@ namespace Arkanoid
             return result;
         }
 
-        /// <summary>Отрисовка текущего состояния.</summary>
+        /// <summary>РћС‚СЂРёСЃРѕРІРєР° С‚РµРєСѓС‰РµРіРѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ.</summary>
         private void OnFormPaint(object? sender, PaintEventArgs e)
         {
-            // блоки
+            // Р±Р»РѕРєРё
             foreach (var block in blocks)
             {
                 if (!block.IsDestroyed)
@@ -144,7 +144,7 @@ namespace Arkanoid
                 }
             }
 
-            // платформа и мяч
+            // РїР»Р°С‚С„РѕСЂРјР° Рё РјСЏС‡
             e.Graphics.FillRectangle(Brushes.Orange, platform.Rect);
             e.Graphics.FillEllipse(Brushes.White, ball.Rect);
 
@@ -158,7 +158,7 @@ namespace Arkanoid
             }
         }
 
-        /// <summary>Двигаем платформу мышью. До старта — везём за ней мяч.</summary>
+        /// <summary>Р”РІРёРіР°РµРј РїР»Р°С‚С„РѕСЂРјСѓ РјС‹С€СЊСЋ. Р”Рѕ СЃС‚Р°СЂС‚Р° вЂ” РІРµР·С‘Рј Р·Р° РЅРµР№ РјСЏС‡.</summary>
         private void OnFormMouseMove(object? sender, MouseEventArgs e)
         {
             int clampedX = Math.Max(minX, Math.Min(maxX - platform.Rect.Width, e.X - platform.Rect.Width / 2));
@@ -172,7 +172,7 @@ namespace Arkanoid
             }
         }
 
-        /// <summary>Старт игры по клику.</summary>
+        /// <summary>РЎС‚Р°СЂС‚ РёРіСЂС‹ РїРѕ РєР»РёРєСѓ.</summary>
         private void OnFormMouseClick(object? sender, MouseEventArgs e)
         {
             if (!isGameStarted)
@@ -182,7 +182,7 @@ namespace Arkanoid
             }
         }
 
-        /// <summary>Главный игровой тик: движение, коллизии, проверка состояния.</summary>
+        /// <summary>Р“Р»Р°РІРЅС‹Р№ РёРіСЂРѕРІРѕР№ С‚РёРє: РґРІРёР¶РµРЅРёРµ, РєРѕР»Р»РёР·РёРё, РїСЂРѕРІРµСЂРєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ.</summary>
         private void OnGameTick(object? sender, EventArgs e)
         {
             UpdateBallPosition();
@@ -193,7 +193,7 @@ namespace Arkanoid
             if (AllBlocksDestroyed())
             {
                 gameTimer.Stop();
-                MessageBox.Show("Победа! Уровень пройден.", "Arkanoid");
+                MessageBox.Show("РџРѕР±РµРґР°! РЈСЂРѕРІРµРЅСЊ РїСЂРѕР№РґРµРЅ.", "Arkanoid");
                 ResetWorld(hardReset: true);
                 Invalidate();
                 return;
@@ -206,13 +206,13 @@ namespace Arkanoid
 
                 if (lives <= 0)
                 {
-                    MessageBox.Show($"Игра окончена.\nСчёт: {score}", "Arkanoid");
+                    MessageBox.Show($"РРіСЂР° РѕРєРѕРЅС‡РµРЅР°.\nРЎС‡С‘С‚: {score}", "Arkanoid");
                     ResetWorld(hardReset: true);
                     Invalidate();
                     return;
                 }
 
-                // новая жизнь: ставим мяч на платформу и сразу продолжаем
+                // РЅРѕРІР°СЏ Р¶РёР·РЅСЊ: СЃС‚Р°РІРёРј РјСЏС‡ РЅР° РїР»Р°С‚С„РѕСЂРјСѓ Рё СЃСЂР°Р·Сѓ РїСЂРѕРґРѕР»Р¶Р°РµРј
                 ResetWorld(hardReset: false);
                 isGameStarted = true;
                 gameTimer.Start();
@@ -223,13 +223,13 @@ namespace Arkanoid
             Invalidate();
         }
 
-        /// <summary>Обновляет позицию мяча на основании скорости.</summary>
+        /// <summary>РћР±РЅРѕРІР»СЏРµС‚ РїРѕР·РёС†РёСЋ РјСЏС‡Р° РЅР° РѕСЃРЅРѕРІР°РЅРёРё СЃРєРѕСЂРѕСЃС‚Рё.</summary>
         private void UpdateBallPosition()
         {
             ball.MoveTo(ball.Rect.X + ball.SpeedX, ball.Rect.Y + ball.SpeedY);
         }
 
-        /// <summary>Отскоки от стен и потолка.</summary>
+        /// <summary>РћС‚СЃРєРѕРєРё РѕС‚ СЃС‚РµРЅ Рё РїРѕС‚РѕР»РєР°.</summary>
         private void HandleWallCollisions()
         {
             if (ball.Rect.Left <= minX || ball.Rect.Right >= maxX)
@@ -243,13 +243,13 @@ namespace Arkanoid
             }
         }
 
-        /// <summary>Отскок от платформы с зависимостью угла от точки попадания.</summary>
+        /// <summary>РћС‚СЃРєРѕРє РѕС‚ РїР»Р°С‚С„РѕСЂРјС‹ СЃ Р·Р°РІРёСЃРёРјРѕСЃС‚СЊСЋ СѓРіР»Р° РѕС‚ С‚РѕС‡РєРё РїРѕРїР°РґР°РЅРёСЏ.</summary>
         private void HandlePlatformCollision()
         {
             if (ball.Rect.IntersectsWith(platform.Rect) && ball.SpeedY > 0)
             {
                 int hitCenterX = ball.Rect.X + ball.Rect.Width / 2;
-                int relativeX = hitCenterX - platform.Rect.X; // расстояние от левого края платформы
+                int relativeX = hitCenterX - platform.Rect.X; // СЂР°СЃСЃС‚РѕСЏРЅРёРµ РѕС‚ Р»РµРІРѕРіРѕ РєСЂР°СЏ РїР»Р°С‚С„РѕСЂРјС‹
                 int segment = platform.Rect.Width / 3;
 
                 if (relativeX < segment)
@@ -266,12 +266,12 @@ namespace Arkanoid
                 }
 
                 ball.SpeedY = -Math.Abs(ball.SpeedY);
-                // выталкиваем мяч над платформой, чтобы не залип
+                // РІС‹С‚Р°Р»РєРёРІР°РµРј РјСЏС‡ РЅР°Рґ РїР»Р°С‚С„РѕСЂРјРѕР№, С‡С‚РѕР±С‹ РЅРµ Р·Р°Р»РёРї
                 ball.MoveTo(ball.Rect.X, platform.Rect.Y - ball.Rect.Height - 1);
             }
         }
 
-        /// <summary>Обработка столкновений мяча с блоками.</summary>
+        /// <summary>РћР±СЂР°Р±РѕС‚РєР° СЃС‚РѕР»РєРЅРѕРІРµРЅРёР№ РјСЏС‡Р° СЃ Р±Р»РѕРєР°РјРё.</summary>
         private void HandleBlocksCollisions()
         {
             foreach (var block in blocks)
@@ -283,7 +283,7 @@ namespace Arkanoid
 
                 if (ball.Rect.IntersectsWith(block.Rect))
                 {
-                    // простое определение стороны удара: по глубине перекрытия
+                    // РїСЂРѕСЃС‚РѕРµ РѕРїСЂРµРґРµР»РµРЅРёРµ СЃС‚РѕСЂРѕРЅС‹ СѓРґР°СЂР°: РїРѕ РіР»СѓР±РёРЅРµ РїРµСЂРµРєСЂС‹С‚РёСЏ
                     Rectangle overlap = GetOverlap(ball.Rect, block.Rect);
                     if (overlap.Width < overlap.Height)
                     {
@@ -299,15 +299,15 @@ namespace Arkanoid
                     {
                         score += 100;
                     }
-                    break; // за тик — максимум один блок
+                    break; // Р·Р° С‚РёРє вЂ” РјР°РєСЃРёРјСѓРј РѕРґРёРЅ Р±Р»РѕРє
                 }
             }
         }
 
-        /// <summary>Проверяет, все ли блоки уничтожены.</summary>
+        /// <summary>РџСЂРѕРІРµСЂСЏРµС‚, РІСЃРµ Р»Рё Р±Р»РѕРєРё СѓРЅРёС‡С‚РѕР¶РµРЅС‹.</summary>
         private bool AllBlocksDestroyed() => blocks.All(b => b.IsDestroyed);
 
-        /// <summary>Вычисляет прямоугольник перекрытия двух прямоугольников.</summary>
+        /// <summary>Р’С‹С‡РёСЃР»СЏРµС‚ РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє РїРµСЂРµРєСЂС‹С‚РёСЏ РґРІСѓС… РїСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРєРѕРІ.</summary>
         private static Rectangle GetOverlap(Rectangle a, Rectangle b)
         {
             int left = Math.Max(a.Left, b.Left);
